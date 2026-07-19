@@ -16,7 +16,7 @@ BLUE    = "\033[34m"
 MAGENTA = "\033[35m"
 CYAN    = "\033[36m"
 WHITE   = "\033[37m"
-#normal 
+#normal
 RESET   = "\033[0m"
 
 
@@ -38,7 +38,7 @@ info_panels = []        #location of info panels
 workers = []            #location of woker aliens
 module_name = ""
 
-#file locations 
+#file locations
 TYPEsound = r"typing.wav"
 
 
@@ -79,13 +79,13 @@ def load_module():
 def get_modules_from(module):
     global module_name
     moves = []
-    text_file = open(f"Charles_Darwin\\module{module}.txt","r") 
+    text_file = open(f"Charles_Darwin\\module{module}.txt","r")
     lines = text_file.readlines()
 
 
     #iteration to read the modules possible moves to ajacent rooms
     for counter in range(4):
-        move_read = int(lines[counter].strip())                                                  #strip() -> removes spaces ect 
+        move_read = int(lines[counter].strip())                                                  #strip() -> removes spaces ect
         if move_read != 0:
             moves.append(move_read)
             module_name = lines[4].strip()
@@ -107,7 +107,7 @@ def output_moves():
     for moves in possible_moves:
         print(moves, '', end = '')
     print()
-    
+   
 def get_action():                                                                                
     global module, last_module, possible_moves, power                                            #make these vars global (acsssable to all)
     valid_action = False
@@ -128,8 +128,8 @@ def get_action():
                 valid_action = True
                 last_module = module                                                             #update last module to the current
                 module = move                                                                    #update module to the users imputed valid modle
-            else: 
-                print("The module must be connected to the module you are currently in.")        #error checking if module inputed is not valid 
+            else:
+                print("The module must be connected to the module you are currently in.")        #error checking if module inputed is not valid
 
         elif action == "l":
             show_map()
@@ -158,9 +158,9 @@ def show_map():
 
 
 #MAIN PROGRAME
-while alive and not won:                                                                         #iteration to loop while playuer is not dead or won 
+while alive and not won:                                                                         #iteration to loop while playuer is not dead or won
     load_module()                                                                                #call load_module() func
-    if won == False and alive == True:                                                           #if player is alive feed the game loop 
+    if won == False and alive == True:                                                           #if player is alive feed the game loop
         output_moves()
         get_action()
 
@@ -171,5 +171,3 @@ if won == True:                                                                 
 if alive == False:
     print("The station lost power unable to sustain life suport, you die. ")
     print("Game over, YOU LOST")
-
-
