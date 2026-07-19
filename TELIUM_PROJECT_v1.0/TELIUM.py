@@ -173,4 +173,3 @@ if alive == False:
     print("Game over, YOU LOST")
 
 
-#€€€€##≤≤≥`¡¡€#¢¶•ªºªºªº≠≠≠‘“‘“æ«…≥÷≤≤
