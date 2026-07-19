@@ -171,3 +171,6 @@ if won == True:                                                                 
 if alive == False:
     print("The station lost power unable to sustain life suport, you die. ")
     print("Game over, YOU LOST")
+
+
+#original
