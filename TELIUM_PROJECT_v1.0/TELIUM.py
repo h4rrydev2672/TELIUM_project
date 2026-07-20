@@ -106,6 +106,12 @@ def output_module():
     print("-" * 60)
     print()
     print("You are in module", module, "This is the", module_name, "room")
+    if module == queen:
+        print("The queen is here!")
+    elif module in vent_shafts:
+        print("There is a vent shaft here.") or \
+        print("You can use it to move to another module.") or \
+        print("You can feel cold air coming from a vent.")
     print()
 
 def output_moves():
@@ -164,8 +170,37 @@ def show_map():
     #winsound.PlaySound(None, 0)
 
 
+def spawn_npcs():
+    global num_modules, queen, vent_shafts, info_panels, workers                                #make these vars global (acsssable to all)
+    modules_set = []
+
+    for counter in range(2, num_modules + 1):                                                   #iteration to loop through all modules
+        modules_set.append(counter)                                                             #add all modules to a list (except module 1, where the player starts)
+    random.shuffle(modules_set)                                                                 #shuffle the list of modules
+    i = 0
+    queen = modules_set[i]                                                                      #assign queen to a random module from the shuffled list
+
+    for counter in range(1, 3):                                                                 #iteration to loop through 2 vent shafts
+        i = i + 1
+        vent_shafts.append(modules_set[i])                                                      #assign vent shafts to random modules from the shuffled list
+
+    for counter in range(3, 5):                                                                 #loop to add 2 random info panles
+        i = i + 1
+        info_panels.append(modules_set[i])                                                      #assing randomly
+
+    for counter in range(0, 3):                                                                 #loop to add 3 random workers
+        i = i + 1
+        workers.append(modules_set[i])                                                          #added them ranomly
+
+
 
 #MAIN PROGRAME
+
+print("Queen is located in module", queen)
+print("Vent shafts are located in modules", vent_shafts)
+print("Info panels are located in modules", info_panels)
+print("Workers are located in modules", workers)
+
 while alive and not won:                                                                         #iteration to loop while playuer is not dead or won
     load_module()                                                                                #call load_module() func
     if won == False and alive == True:                                                           #if player is alive feed the game loop
