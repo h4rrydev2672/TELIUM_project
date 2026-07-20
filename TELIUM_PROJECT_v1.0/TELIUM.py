@@ -2,6 +2,12 @@
 #TELIUM - texted baced - light - commented + structured   -- not able to use on mac due to winsound library -> remove winsound and sound effects to make it work on mac 
 #-------------------------------------------------------
 
+##INFORMATION##---------------------------------------------------------------------------------------
+#.   IF ERRORS OCCUR, RUN THE PROGRAM IN A TERMINAL, WITH: ->
+#.   cd /Users/harryshorter/Documents/GitHub/TELIUM_project/TELIUM_PROJECT_v1.0 && python3 TELIUM.py
+#-----------------------------------------------------------------------------------------------------
+
+
 #import librarys
 import random
 #import winsound
@@ -174,5 +180,3 @@ if alive == False:
     print("Game over, YOU LOST")
 
 
-#IF ERRORS OCCUR, RUN THE PROGRAM IN A TERMINAL, WITH: ->
-#cd /Users/harryshorter/Documents/GitHub/TELIUM_project/TELIUM_PROJECT_v1.0 && python3 TELIUM.py
