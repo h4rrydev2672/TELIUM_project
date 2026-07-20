@@ -48,12 +48,33 @@ module_name = ""
 #file locations
 TYPEsound = r"typing.wav"
 
+def spawn_npcs():
+    global num_modules, queen, vent_shafts, info_panels, workers                                #make these vars global (acsssable to all)
+    modules_set = []                                                                            #table to hold all modules (except module 1, where the player starts)
+
+    for counter in range(2, num_modules + 1):                                                   #iteration to loop through all modules except module 1
+        modules_set.append(counter)                                                             #add all modules to a list 
+    random.shuffle(modules_set)                                                                 #shuffle the list of modules
+    i = 0
+    queen = modules_set[i]                                                                      #assign queen to a random module from the shuffled list
+
+    for counter in range(1, 3):                                                                 #iteration to loop through 2 vent shafts
+        i = i + 1
+        vent_shafts.append(modules_set[i])                                                      #assign vent shafts to random modules from the shuffled list
+
+    for counter in range(3, 5):                                                                 #loop to add 2 random info panles
+        i = i + 1
+        info_panels.append(modules_set[i])                                                      #assing randomly
+
+    for counter in range(0, 3):                                                                 #loop to add 3 random workers
+        i = i + 1                                                                               
+        workers.append(modules_set[i])                                                          #added them ranomly
 
 
 def TitleScreen():
     global user_option
 
-    print(f"{BLUE}-{BLUE}" * 20)
+    print(f"{BLUE}-{BLUE}" * 20)                                                                #titlescean design
     print("Welcome to Telium")
     print(f"{BLUE}-{BLUE}" * 20)
     print(f"{WHITE}-{WHITE}" * 20)
@@ -106,12 +127,25 @@ def output_module():
     print("-" * 60)
     print()
     print("You are in module", module, "This is the", module_name, "room")
-    if module == queen:
-        print("The queen is here!")
-    elif module in vent_shafts:
-        print("There is a vent shaft here.") or \
-        print("You can use it to move to another module.") or \
-        print("You can feel cold air coming from a vent.")
+
+    if module == queen:                                                                         #if the player is in the same module as the queen
+        queen_responcese = ["The queen is here, it looks very angry.",                          
+                            "The queen is here, it looks very hungry.",
+                            "The queen is here, it looks very dangerous."]
+        print(ch(queen_responcese))                                                            #print one of 3 responce from table
+
+    if module in vent_shafts:                                                                   #if the player is in the same module as a vent shaft
+        vent_responcese = ["There is a vent shaft here.",
+                            "You can use it to move to another module.",
+                            "You can feel cold air coming from a vent."]
+        print(random.choice(vent_responcese))                                                   #print one of 3 responce from table
+
+    if module in workers:                                                                       #if the player is in the same module as a worker
+        worker_responcese = ["There is a worker here.",
+                            "You can hear a worker moving around.",
+                            "You can see a worker moving around."]
+        print(random.choice(worker_responcese))                                                 #print one of 3 responce from table
+
     print()
 
 def output_moves():
@@ -170,32 +204,9 @@ def show_map():
     #winsound.PlaySound(None, 0)
 
 
-def spawn_npcs():
-    global num_modules, queen, vent_shafts, info_panels, workers                                #make these vars global (acsssable to all)
-    modules_set = []
-
-    for counter in range(2, num_modules + 1):                                                   #iteration to loop through all modules
-        modules_set.append(counter)                                                             #add all modules to a list (except module 1, where the player starts)
-    random.shuffle(modules_set)                                                                 #shuffle the list of modules
-    i = 0
-    queen = modules_set[i]                                                                      #assign queen to a random module from the shuffled list
-
-    for counter in range(1, 3):                                                                 #iteration to loop through 2 vent shafts
-        i = i + 1
-        vent_shafts.append(modules_set[i])                                                      #assign vent shafts to random modules from the shuffled list
-
-    for counter in range(3, 5):                                                                 #loop to add 2 random info panles
-        i = i + 1
-        info_panels.append(modules_set[i])                                                      #assing randomly
-
-    for counter in range(0, 3):                                                                 #loop to add 3 random workers
-        i = i + 1
-        workers.append(modules_set[i])                                                          #added them ranomly
-
-
 
 #MAIN PROGRAME
-
+spawn_npcs()                                                                                   #call spawn_npcs() func to spawn the npcs in random modules
 print("Queen is located in module", queen)
 print("Vent shafts are located in modules", vent_shafts)
 print("Info panels are located in modules", info_panels)
@@ -214,5 +225,4 @@ if won == True:                                                                 
 if alive == False:
     print("The station lost power unable to sustain life suport, you die. ")
     print("Game over, YOU LOST")
-
 
