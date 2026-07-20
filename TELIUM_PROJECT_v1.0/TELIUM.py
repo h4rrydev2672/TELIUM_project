@@ -174,4 +174,5 @@ if alive == False:
     print("Game over, YOU LOST")
 
 
-#original
+#IF ERRORS OCCUR, RUN THE PROGRAM IN A TERMINAL, WITH: ->
+#cd /Users/harryshorter/Documents/GitHub/TELIUM_project/TELIUM_PROJECT_v1.0 && python3 TELIUM.py
