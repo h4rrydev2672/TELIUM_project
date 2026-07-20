@@ -5,6 +5,7 @@
 ##INFORMATION##---------------------------------------------------------------------------------------
 #.   IF ERRORS OCCUR, RUN THE PROGRAM IN A TERMINAL, WITH: ->
 #.   cd /Users/harryshorter/Documents/GitHub/TELIUM_project/TELIUM_PROJECT_v1.0 && python3 TELIUM.py
+#.   python "C:\Users\YourName\Documents\GitHub\TELIUM_project\TELIUM_PROJECT_v1.0\TELIUM.py"
 #-----------------------------------------------------------------------------------------------------
 
 
