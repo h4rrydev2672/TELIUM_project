@@ -1,10 +1,10 @@
 #-------------------------------------------------------
-#TELIUM - texted baced - light - commented + structured     \
+#TELIUM - texted baced - light - commented + structured   -- not able to use on mac due to winsound library -> remove winsound and sound effects to make it work on mac 
 #-------------------------------------------------------
 
 #import librarys
 import random
-import winsound
+#import winsound
 import time
 
 #colors
@@ -79,7 +79,8 @@ def load_module():
 def get_modules_from(module):
     global module_name
     moves = []
-    text_file = open(f"Charles_Darwin\\module{module}.txt","r")
+    # text_file = open(f"Charles_Darwin\\module{module}.txt","r")    #FOR WINDOWS USE
+    text_file = open(f"Charles_Darwin/module{module}.txt", "r")      #FOR MAC USE
     lines = text_file.readlines()
 
 
@@ -142,18 +143,18 @@ def typeLine(line):
         time.sleep(0.0005)
 
 def show_map():
-    winsound.PlaySound(TYPEsound, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_LOOP)
+    #winsound.PlaySound(TYPEsound, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_LOOP)
 
     with open("MAP.txt", "r", encoding="utf-8") as mapfile:
         for line in mapfile:
-            target = f"{module:02d}"      # ALWAYS two digits: 01, 02, 07, 12
+            target = f"{module:02d}"                                                            # ALWAYS two digits: 01, 02, 07, 12
 
             if target in line:
-                line = line.replace(target, f"{RED}👨{RESET}")   # marker inside the box, same width
+                line = line.replace(target, f"{RED}👨{RESET}")                                  # marker inside the box, same width
 
             typeLine(line)
 
-    winsound.PlaySound(None, 0)
+    #winsound.PlaySound(None, 0)
 
 
 
