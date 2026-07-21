@@ -1,12 +1,11 @@
 #-------------------------------------------------------
-#TELIUM - texted baced - light - commented + structured   -- not able to use on mac due to winsound library -> remove winsound and sound effects to make it work on mac 
+#TELIUM - texted baced - light - commented + structured  
 #-------------------------------------------------------
 
-##INFORMATION##---------------------------------------------------------------------------------------
-#.   IF ERRORS OCCUR, RUN THE PROGRAM IN A TERMINAL, WITH: ->
-#.   cd /Users/harryshorter/Documents/GitHub/TELIUM_project/TELIUM_PROJECT_v1.0 && python3 TELIUM.py
-#.   python "C:\Users\YourName\Documents\GitHub\TELIUM_project\TELIUM_PROJECT_v1.0\TELIUM.py"
-#-----------------------------------------------------------------------------------------------------
+##INFORMATION##------------------------------------------------
+#. not able to use on mac due to winsound library -> 
+# remove winsound and sound effects to make it work on mac 
+#--------------------------------------------------------------
 
 
 #import librarys
@@ -226,3 +225,4 @@ if alive == False:
     print("The station lost power unable to sustain life suport, you die. ")
     print("Game over, YOU LOST")
 
+#updated version 1.0.1
