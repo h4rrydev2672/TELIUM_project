@@ -30,7 +30,7 @@ RESET   = "\033[0m"
 
 
 #global vars
-num_modules = 17
+num_modules = 12
 module = 1
 last_module = 0
 possible_moves = []
@@ -132,11 +132,11 @@ def output_module():
         queen_responcese = ["The queen is here, it looks very angry.",                          
                             "The queen is here, it looks very hungry.",
                             "The queen is here, it looks very dangerous."]
-        print(ch(queen_responcese))                                                            #print one of 3 responce from table
+        print(random.choice(queen_responcese))                                                 #print one of 3 responce from table
 
     if module in vent_shafts:                                                                   #if the player is in the same module as a vent shaft
         vent_responcese = ["There is a vent shaft here.",
-                            "You can use it to move to another module.",
+                            "You can use  a vent to move to another module.",
                             "You can feel cold air coming from a vent."]
         print(random.choice(vent_responcese))                                                   #print one of 3 responce from table
 
