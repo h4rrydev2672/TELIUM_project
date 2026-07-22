@@ -96,6 +96,29 @@ def TitleScreen():
 
 TitleScreen()
 
+def check_vent_shafts():
+    global num_modules, module, vent_shafts, fuel, current_module, last_module
+    fuel_table = [20, 30, 40, 50]                                                                    #table of fuel amounts
+    if module in vent_shafts :                                                          
+        print("There is a bank of fuel cells here.")
+        print("You can laad them into your famethrower.")                                            #picks a random amount of fuel from the fuel_table and adds it to the players current fuel
+        fuel_gained = random.choice(fuel_table)                                                      #randomly select a fuel amount from the table
+        print("Fule was", fuel, "now reading", fuel + fuel_gained)
+        fuel = fuel + fuel_gained
+        print("The doors suddenly lock shut.")
+        print("What is happening to the station?")
+        print("our only escape is to climb into the vent and move to another module.")
+        print("We have no idea where we are going.")
+        print("We follow the passage and find ourselvs sliding down.")
+
+        last_module = module
+        module = random.randint(1, num_modules)
+        while module == last_module or module in vent_shafts:
+            module = random.randint(1, num_modules)
+
+        print("We have arrived in module", module)
+
+
 
 #procedure declarations
 def load_module():
@@ -147,6 +170,7 @@ def output_module():
 
     print()
 
+
 def output_moves():
     global possible_moves
     print()
@@ -174,7 +198,8 @@ def get_action():
                 power -= 1                                                                       #subs 1 from power var every move
                 valid_action = True
                 last_module = module                                                             #update last module to the current
-                module = move                                                                    #update module to the users imputed valid modle
+                module = move    
+                check_vent_shafts()                                                                #update module to the users imputed valid modle
             else:
                 print("The module must be connected to the module you are currently in.")        #error checking if module inputed is not valid
 
