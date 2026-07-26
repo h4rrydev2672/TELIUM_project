@@ -3,7 +3,7 @@
 #-------------------------------------------------------
 
 ##INFORMATION##------------------------------------------------
-#. not able to use on mac due to winsound library -> 
+#not able to use on mac due to winsound library -> 
 # remove winsound and sound effects to make it work on mac 
 #--------------------------------------------------------------
 
