@@ -200,22 +200,22 @@ def lock(module_to_lock=None):
 
     # Disallow locking the queen module
     if new_lock == queen:
-        print("You cannot lock the module with the queen in it.")                                  # cannot lock the queen's module
+        print("You cannot lock the module with the queen in it.")                                   # cannot lock the queen's module
         return
 
     # Already locked?
     if new_lock == locked:
-        print("Module", new_lock, "is already locked, you cannot lock it again.")                  # inform if module is already locked
+        print("Module", new_lock, "is already locked, you cannot lock it again.")                   # inform if module is already locked
         return
 
     # Lock it
     locked = new_lock                                                                                # set the locked module
-    print("Aliens cannot enter module", locked, "anymore.")                                         # feedback to player
+    print("Aliens cannot enter module", locked, "anymore.")                                          # feedback to player
 
     # Use power for the lock operation and report it
     power_used = 25 + 5 * random.randint(0, 5)                                                       # random power cost formula
     power -= power_used                                                                              # subtract used power from total
-    print("Power used:", power_used, "Power remaining:", power)                                     # show power consumption and remaining
+    print("Power used:", power_used, "Power remaining:", power)                                      # show power consumption and remaining
 
 
 def get_action():
@@ -223,7 +223,7 @@ def get_action():
 
     valid_action = False                                                                              # loop until a valid action is taken
     while not valid_action:
-        print("What do you want to do next? [MOVE] [SCANNER] [L -> MAP] [LOCK]")                     # prompt options
+        print("What do you want to do next? [MOVE] [SCANNER] [L -> MAP] [LOCK]")                      # prompt options
         action = input(">").lower().strip()                                                           # read player input, normalize
 
         # MOVE handling (supports "move 2", "m2", "m 2", or entering only the destination after "move")
@@ -246,14 +246,14 @@ def get_action():
                 check_vent_shafts()                                                                   # process vent effects after move
             else:
                 print("The module must be connected to the module you are currently in.")             # invalid move (not adjacent)
-            continue                                                                                   # go back to top of action loop
+            continue                                                                                  # go back to top of action loop
 
         # LOCK handling: supports "lock 5", "lock5", "l5", "l 5". Single "l" is map (see below).
         if action.startswith("lock") or (action.startswith("l") and action != "l"):
             if action.startswith("lock"):
                 lock_text = action[len("lock"):].strip()                                              # get trailing digits from "lock5" or "lock 5"
             else:
-                lock_text = action[1:].strip()                                                         # get trailing digits from "l5" or "l 5"
+                lock_text = action[1:].strip()                                                        # get trailing digits from "l5" or "l 5"
 
             if lock_text.isdigit():
                 module_to_lock = int(lock_text)                                                       # convert to int and lock
@@ -273,9 +273,9 @@ def get_action():
             if command == "lock":
                 lock()                                                                                 # scanner lock -> prompt for module
             elif command == "power":
-                print("Power remaining:", power)                                                      # show power via scanner
+                print("Power remaining:", power)                                                       # show power via scanner
             else:
-                print("Unknown scanner command.")                                                     # invalid scanner command
+                print("Unknown scanner command.")                                                      # invalid scanner command
             continue                                                                                   # go back to action loop
 
         print("Unknown action. Try MOVE, LOCK, SCANNER, or L (map).")                                   # fallback for bad action input
