@@ -282,7 +282,6 @@ def get_action():
 
 
 
-
 def typeLine(line):
     for letter in line:
         print(letter, end="", flush=True)
