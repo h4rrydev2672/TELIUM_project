@@ -154,7 +154,7 @@ def output_module():
         queen_responcese = ["The queen is here, it looks very angry.",                          
                             "The queen is here, it looks very hungry.",
                             "The queen is here, it looks very dangerous."]
-        print(random.choice(queen_responcese))                                                 #print one of 3 responce from table
+        print(random.choice(queen_responcese))                                                  #print one of 3 responce from table
 
     if module in vent_shafts:                                                                   #if the player is in the same module as a vent shaft
         vent_responcese = ["There is a vent shaft here.",
@@ -180,105 +180,104 @@ def output_moves():
     print()
 
 
-def lock(module_to_lock=None):
-    global num_modules, power, locked, queen                                                       # make these globals available inside the function
+def lock(module_to_lock = None):
+    global num_modules, power, locked, queen                                                      # make these globals available inside the function
 
-    # Determine which module to lock (prompt if no argument supplied)
-    if module_to_lock is None:
-        try:
-            new_lock = int(input("Enter the module number to lock: "))                             # ask the player for a module number
-        except ValueError:
-            print("Invalid input: please enter a number.")                                          # handle non-numeric input
-            return                                                                                  # abort on invalid input
+    
+
+
+    if module_to_lock is None:                                                                    #check if module_to_lock is provided, if not ask the user for input
+        new_lock_str = input("Enter the module number to lock: ")                               
+        if not new_lock_str.isdigit():                                                            #chesks if its valid numb                                          
+            print("Invalid input: please enter a number.")
+            return
+        new_lock = int(new_lock_str)                                                              #set new_lock to the user input
     else:
-        new_lock = int(module_to_lock)                                                              # use provided argument (e.g. lock(5))
+        new_lock = int(module_to_lock)                                                            #fallback to the provided module_to_lock if it is not None
 
-    # Validate module range (modules are numbered 1..num_modules)
-    if new_lock < 1 or new_lock > num_modules:
-        print("Invalid module number, operation not permitted.")                                    # out-of-range modules not allowed
-        return
+    if new_lock < 1 or new_lock > num_modules:                                                    #check if the module number is valid
+        print("Invalid module number, operation not permitted.")
+        return                                                                                    #continue to the next iteration of the loop if the module number is invalid
 
-    # Disallow locking the queen module
-    if new_lock == queen:
-        print("You cannot lock the module with the queen in it.")                                   # cannot lock the queen's module
-        return
+    if new_lock == queen:                                                                         #dont allow locking the module with the queen in it
+        print("You cannot lock the module with the queen in it.")
+        return                                                                                    #fallback to the next iteration of the loop if the module number is invalid
 
-    # Already locked?
-    if new_lock == locked:
-        print("Module", new_lock, "is already locked, you cannot lock it again.")                   # inform if module is already locked
-        return
+    if new_lock == locked:                                                                        #if
+        print("Module", new_lock, "is already locked, you cannot lock it again.")
+        return                                                                                    #fallback to the next iteration of the loop if the module number is invalid
 
-    # Lock it
-    locked = new_lock                                                                                # set the locked module
-    print("Aliens cannot enter module", locked, "anymore.")                                          # feedback to player
+    locked = new_lock                                                                             #lock the module by setting the locked variable to the new_lock value
+    print("Aliens cannot enter module", locked, "anymore.")
 
-    # Use power for the lock operation and report it
-    power_used = 25 + 5 * random.randint(0, 5)                                                       # random power cost formula
-    power -= power_used                                                                              # subtract used power from total
-    print("Power used:", power_used, "Power remaining:", power)                                      # show power consumption and remaining
+    power_used = 25 + 5 * random.randint(0, 5)                                                    #calculate the power used to lock the module, with a random component
+    power -= power_used
+    print("Power used:", power_used, "Power remaining:", power)
 
 
 def get_action():
     global module, last_module, possible_moves, power                                                # make game state vars accessible
 
-    valid_action = False                                                                              # loop until a valid action is taken
+    #MOVE HANDLEING
+
+    valid_action = False                                                                             # loop until a valid action is taken
     while not valid_action:
-        print("What do you want to do next? [MOVE] [SCANNER] [L -> MAP] [LOCK]")                      # prompt options
-        action = input(">").lower().strip()                                                           # read player input, normalize
+        print("What do you want to do next? [MOVE] [SCANNER] [L -> MAP] [LOCK]")
+        action = input(">").lower().strip()                                                         # all input valid 
 
-        # MOVE handling (supports "move 2", "m2", "m 2", or entering only the destination after "move")
-        if action.startswith("move") or action.startswith("m"):
-            move_text = action.replace("move", "", 1).replace("m", "", 1).strip()                     # strip command to get number
+        if action.startswith("move") or action.startswith("m"):                                      #allowing 'm' as a shorthand for 'move'
+            move_text = action.replace("move", "", 1).replace("m", "", 1).strip()                    
             if move_text.isdigit():
-                move = int(move_text)                                                                 # parse direct number e.g. "m2"
+                move = int(move_text)
             else:
-                try:
-                    move = int(input("Enter module number to move to: "))                             # fallback prompt
-                except ValueError:
-                    print("Invalid module number.")                                                   # invalid fallback input
+                move_input = input("Enter module number to move to: ")
+                if not move_input.isdigit():                                                        #dont allow non-numeric input for module number
+                    print("Invalid module number.")
                     continue
+                move = int(move_input)
 
-            if move in possible_moves:
-                power -= 1                                                                            # moving costs 1 power
-                valid_action = True                                                                   # accept action and break loop
-                last_module = module                                                                  # update last module
-                module = move                                                                         # update current module
-                check_vent_shafts()                                                                   # process vent effects after move
+            if move in possible_moves:                                                             #check if the move is valid (i.e., the module is adjacent to the current module)
+                power -= 1                                                                         #decrease power by 1 for moving
+                valid_action = True                                                                #udtate a bunch or vars 
+                last_module = module
+                module = move
+                check_vent_shafts()
             else:
-                print("The module must be connected to the module you are currently in.")             # invalid move (not adjacent)
-            continue                                                                                  # go back to top of action loop
+                print("The module must be connected to the module you are currently in.")
+            continue
 
-        # LOCK handling: supports "lock 5", "lock5", "l5", "l 5". Single "l" is map (see below).
-        if action.startswith("lock") or (action.startswith("l") and action != "l"):
-            if action.startswith("lock"):
-                lock_text = action[len("lock"):].strip()                                              # get trailing digits from "lock5" or "lock 5"
+        #LOCK HANDLEING
+
+        if action.startswith("lock") or (action.startswith("l") and action != "l"):               #allowing 'l' as a shorthand for 'lock', but not for the map command              
+            if action.startswith("lock"):                                                           
+                lock_text = action[len("lock"):].strip()                                          #allow for 'lock' followed by a module number
             else:
-                lock_text = action[1:].strip()                                                        # get trailing digits from "l5" or "l 5"
+                lock_text = action[1:].strip()                                                    #allow for 'l' followed by a module number
 
-            if lock_text.isdigit():
-                module_to_lock = int(lock_text)                                                       # convert to int and lock
+            if lock_text.isdigit():                              
+                module_to_lock = int(lock_text)                 
                 lock(module_to_lock)
             else:
-                lock()                                                                                 # no number given -> prompt inside lock()
-            continue                                                                                   # loop for next action
+                lock()                                                                            #call function 
+            continue
 
-        # Single-letter 'l' shows the map
-        if action == "l":
-            show_map()                                                                                 # l alone displays the map
-            continue                                                                                   # return to action prompt
+        if action == "l":                                                                         #if preesed call func show_map() to display the map    
+            show_map()
+            continue
 
-        # SCANNER handling
-        if action == "scanner" or action == "s":
-            command = input("Scanner ready, Enter command (LOCK), (POWER): ").lower().strip()          # scanner options
+        # SCANNER HANDLEING
+
+        if action == "scanner" or action == "s":                                                 #allowing 's' as a shorthand for 'scanner'
+            command = input("Scanner ready, Enter command (LOCK), (POWER): ").lower().strip()    #allows abriviated commands for scanner
             if command == "lock":
-                lock()                                                                                 # scanner lock -> prompt for module
+                lock()
             elif command == "power":
-                print("Power remaining:", power)                                                       # show power via scanner
+                print("Power remaining:", power)
             else:
-                print("Unknown scanner command.")                                                      # invalid scanner command
-            continue                                                                                   # go back to action loop
+                print("Unknown scanner command.")
+            continue
 
-        print("Unknown action. Try MOVE, LOCK, SCANNER, or L (map).")                                   # fallback for bad action input
+        print("Unknown action. Try MOVE, LOCK, SCANNER, or L (map).")
 
 
 
