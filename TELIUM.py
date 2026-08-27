@@ -275,7 +275,7 @@ def get_action():
                 print("Power remaining:", power)
             else:
                 print("Unknown scanner command.")
-            continue
+            continue                                                                            #allow to continue
 
         print("Unknown action. Try MOVE, LOCK, SCANNER, or L (map).")
 
