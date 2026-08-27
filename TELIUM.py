@@ -14,14 +14,15 @@ import random
 import time
 
 #colors
-BLACK   = "\033[30m"
-RED     = "\033[31m"
-GREEN   = "\033[32m"
-YELLOW  = "\033[33m"
-BLUE    = "\033[34m"
-MAGENTA = "\033[35m"
-CYAN    = "\033[36m"
-WHITE   = "\033[37m"
+BLACK   = "\033[30m"    #locks 
+RED     = "\033[31m"    #warniings 
+GREEN   = "\033[32m"    #notifications
+YELLOW  = "\033[33m"    #queen
+BLUE    = "\033[34m"    #vents 
+MAGENTA = "\033[35m"    #move 
+CYAN    = "\033[36m"    #info panels
+WHITE   = "\033[37m"    #defult/info 
+ORANGE  = "\033[38;5;208m" #worker aliens
 #normal
 RESET   = "\033[0m"
 
@@ -86,12 +87,23 @@ def TitleScreen():
 
     user_option = input(" Enter your choise _>").lower()
     if user_option == "p":
+        print(f"{GREEN}-{GREEN}" * len("Starting game..."))                                        #added same approche 
         print("Starting game...")
+        print(f"{GREEN}-{RESET}" * len("Starting game..."))
+        print(" \n ")
+
         return
+
     elif user_option == "z":
-        print(f"{WHITE}sorry!, there are curently no instructions our solo dev team \n is working on it {WHITE}")
+        print(f"{WHITE}-{WHITE}" * 78)
+        print(f"{WHITE}sorry!, there are curently no instructions our solo dev team is working on it {WHITE}")
+        print(f"{WHITE}-{RESET}" * 78)
+        print(" \n ")
+
     elif user_option == "q":
+        print(f"{WHITE}-{WHITE}" * len("Bye.."))                                                    #trying smt difrent 
         print("Bye..")
+        print(f"{WHITE}-{RESET}" * len("Bye.."))
         quit()
 
 TitleScreen()
@@ -99,24 +111,28 @@ TitleScreen()
 def check_vent_shafts():
     global num_modules, module, vent_shafts, fuel, current_module, last_module
     fuel_table = [20, 30, 40, 50]                                                                    #table of fuel amounts
-    if module in vent_shafts :                                                          
+    if module in vent_shafts :
+        print(f"{BLUE}-{RESET}" * 40)                                                        
         print("There is a bank of fuel cells here.")
         print("You can laad them into your famethrower.")                                            #picks a random amount of fuel from the fuel_table and adds it to the players current fuel
-        fuel_gained = random.choice(fuel_table)                                                      #randomly select a fuel amount from the table
-        print("Fule was", fuel, "now reading", fuel + fuel_gained)
+        print(f"{BLUE}-{RESET}" * 40)
+        fuel_gained = random.choice(fuel_table)                                                      #randomly select a fuel amount from the table)
+        print(f"Fule was{GREEN}{fuel}{RESET}, now reading {GREEN}{fuel + fuel_gained}{RESET}")
         fuel = fuel + fuel_gained
-        print("The doors suddenly lock shut.")
-        print("What is happening to the station?")
-        print("our only escape is to climb into the vent and move to another module.")
+        print(f"{BLUE}-{RESET}" * 70)
+        print("The doors suddenly lock shut..  What is happening to the station?")
+        print(f"our only escape is to climb into the {BLUE}vent{RESET} and move to another module.")
         print("We have no idea where we are going.")
         print("We follow the passage and find ourselvs sliding down.")
+        print(f"{BLUE}-{RESET}" * 70)
 
         last_module = module
         module = random.randint(1, num_modules)
         while module == last_module or module in vent_shafts:
             module = random.randint(1, num_modules)
-
+        print(f"{WHITE}-{WHITE}" * 40)
         print("We have arrived in module", module)
+        print(f"{WHITE}-{RESET}" * 40)
 
 
 
@@ -146,26 +162,26 @@ def get_modules_from(module):
 def output_module():
     global module
     print()
-    print("-" * 60)
+    print(f"{BLACK}-{RESET}" * 160)
     print()
     print("You are in module", module, "This is the", module_name, "room")
 
     if module == queen:                                                                         #if the player is in the same module as the queen
-        queen_responcese = ["The queen is here, it looks very angry.",                          
-                            "The queen is here, it looks very hungry.",
-                            "The queen is here, it looks very dangerous."]
+        queen_responcese = [f"The {YELLOW}queen{RESET} is here, it looks very angry.",                          
+                            f"The {YELLOW}queen{RESET} is here, it looks very hungry.",
+                            f"The {YELLOW}queen{RESET} is here, it looks very dangerous."]
         print(random.choice(queen_responcese))                                                  #print one of 3 responce from table
 
     if module in vent_shafts:                                                                   #if the player is in the same module as a vent shaft
-        vent_responcese = ["There is a vent shaft here.",
-                            "You can use  a vent to move to another module.",
-                            "You can feel cold air coming from a vent."]
+        vent_responcese = [f"There is a {BLUE}vent shaft{RESET} here.",
+                            f"You can use  a {BLUE}vent{RESET} to move to another module.",
+                            f"You can feel {BLUE}cold air{RESET} coming from a vent."]
         print(random.choice(vent_responcese))                                                   #print one of 3 responce from table
 
     if module in workers:                                                                       #if the player is in the same module as a worker
-        worker_responcese = ["There is a worker here.",
-                            "You can hear a worker moving around.",
-                            "You can see a worker moving around."]
+        worker_responcese = [f"There is a {ORANGE}worker{RESET} here.",
+                            f"You can hear a {ORANGE}worker{RESET} moving around.",
+                            f"You can see a {ORANGE}worker{RESET} moving around."]
         print(random.choice(worker_responcese))                                                 #print one of 3 responce from table
 
     print()
@@ -189,30 +205,30 @@ def lock(module_to_lock = None):
     if module_to_lock is None:                                                                    #check if module_to_lock is provided, if not ask the user for input
         new_lock_str = input("Enter the module number to lock: ")                               
         if not new_lock_str.isdigit():                                                            #chesks if its valid numb                                          
-            print("Invalid input: please enter a number.")
+            print(f"{RED}Invalid input: please enter a number.{RESET}")
             return
         new_lock = int(new_lock_str)                                                              #set new_lock to the user input
     else:
         new_lock = int(module_to_lock)                                                            #fallback to the provided module_to_lock if it is not None
 
     if new_lock < 1 or new_lock > num_modules:                                                    #check if the module number is valid
-        print("Invalid module number, operation not permitted.")
+        print(f"{RED}Invalid module number, operation not permitted.{RESET}")
         return                                                                                    #continue to the next iteration of the loop if the module number is invalid
 
     if new_lock == queen:                                                                         #dont allow locking the module with the queen in it
-        print("You cannot lock the module with the queen in it.")
+        print(f"{RED}You cannot lock the module with the queen in it.{RESET}")
         return                                                                                    #fallback to the next iteration of the loop if the module number is invalid
 
     if new_lock == locked:                                                                        #if
-        print("Module", new_lock, "is already locked, you cannot lock it again.")
+        print(f"{RED}Module {new_lock} is already locked, you cannot lock it again.{RESET}")
         return                                                                                    #fallback to the next iteration of the loop if the module number is invalid
 
     locked = new_lock                                                                             #lock the module by setting the locked variable to the new_lock value
-    print("Aliens cannot enter module", locked, "anymore.")
+    print(f"{RED}Aliens cannot enter module {locked} anymore.{RESET}")
 
     power_used = 25 + 5 * random.randint(0, 5)                                                    #calculate the power used to lock the module, with a random component
     power -= power_used
-    print("Power used:", power_used, "Power remaining:", power)
+    print(f"Power used: {GREEN}{power_used}{RESET}, Power remaining: {GREEN}{power}{RESET}")
 
 
 def get_action():
@@ -222,7 +238,8 @@ def get_action():
 
     valid_action = False                                                                             # loop until a valid action is taken
     while not valid_action:
-        print("What do you want to do next? [MOVE] [SCANNER] [L -> MAP] [LOCK]")
+        print(f"What do you want to do next? {MAGENTA}MOVE{RESET}, {BLACK}LOCK{RESET}, {WHITE}SCANNER{RESET}, or L (map).{RESET}")
+        print(f"{BLACK}-{RESET}" * 160)
         action = input(">").lower().strip()                                                         # all input valid 
 
         if action.startswith("move") or action.startswith("m"):                                      #allowing 'm' as a shorthand for 'move'
@@ -232,7 +249,7 @@ def get_action():
             else:
                 move_input = input("Enter module number to move to: ")
                 if not move_input.isdigit():                                                        #dont allow non-numeric input for module number
-                    print("Invalid module number.")
+                    print(f"{RED}Invalid module number.{RESET}")
                     continue
                 move = int(move_input)
 
@@ -243,7 +260,7 @@ def get_action():
                 module = move
                 check_vent_shafts()
             else:
-                print("The module must be connected to the module you are currently in.")
+                print(f"{RED}The module must be connected to the module you are currently in.{RESET}")
             continue
 
         #LOCK HANDLEING
@@ -272,12 +289,12 @@ def get_action():
             if command == "lock":
                 lock()
             elif command == "power":
-                print("Power remaining:", power)
+                print(f"Power remaining: {GREEN}{power}{RESET}")
             else:
-                print("Unknown scanner command.")
+                print(f"{RED}Unknown scanner command.{RESET}")
             continue                                                                            #allow to continue
 
-        print("Unknown action. Try MOVE, LOCK, SCANNER, or L (map).")
+        print(f"{RED}Unknown action.{RESET} Try {MAGENTA}MOVE{RESET}, {BLACK}LOCK{RESET}, {WHITE}SCANNER{RESET}, or L (map).{RESET}")
 
 
 
@@ -304,10 +321,21 @@ def show_map():
 
 #MAIN PROGRAME
 spawn_npcs()                                                                                   #call spawn_npcs() func to spawn the npcs in random modules
+print(f"{YELLOW}-{YELLOW}" * 45)
 print("Queen is located in module", queen)
+print(f"{YELLOW}-{RESET}" * 45)
+
+print(f"{BLUE}-{BLUE}" * 45)
 print("Vent shafts are located in modules", vent_shafts)
+print(f"{BLUE}-{RESET}" * 45)
+
+print(f"{WHITE}-{WHITE}" * 45)
 print("Info panels are located in modules", info_panels)
+print(f"{WHITE}-{RESET}" * 45)
+
+print(f"{ORANGE}-{ORANGE}" * 45)
 print("Workers are located in modules", workers)
+print(f"{ORANGE}-{RESET}" * 45)
 
 while alive and not won:                                                                         #iteration to loop while playuer is not dead or won
     load_module()                                                                                #call load_module() func
