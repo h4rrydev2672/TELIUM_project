@@ -108,18 +108,6 @@ def TitleScreen():
 
 TitleScreen()
 
-def move_queen():
-    global num_modues, module, last_module, locked, queen, won, vent_shafts
-    if module == queen:                                                                            #if the player is in the same module as the queen
-        print(f"{YELLOW}-{RESET}" * 40)
-        print("The queen is here, it looks very angry.")
-        print(f"{YELLOW}-{RESET}" * 40)
-        moves_to_move = random.randint(1, 3)                                                       #desides how many moves the queen takes
-        can_move_to_last_module = False
-        while moves_to_move  >  0:
-            
-
-
 
 
 def check_vent_shafts():
@@ -163,7 +151,6 @@ def get_modules_from(module):
     text_file = open(f"Charles_Darwin/module{module}.txt", "r")      #FOR MAC USE
     lines = text_file.readlines()
 
-
     #iteration to read the modules possible moves to ajacent rooms
     for counter in range(4):
         move_read = int(lines[counter].strip())                                                  #strip() -> removes spaces ect
@@ -172,6 +159,98 @@ def get_modules_from(module):
             module_name = lines[4].strip()
     text_file.close()
     return moves
+
+
+def move_queen():
+    global num_modules, module, last_module, locked, queen, won, vent_shafts, fuel
+    
+    if module == queen:                                                                         # if the player is in the same module as the queen
+        print(f"{YELLOW}-{RESET}" * 40)
+        print("The queen is here, it looks very angry.")
+        print(f"{YELLOW}-{RESET}" * 40)
+        
+        moves_to_make = random.randint(1, 3)                                                   # decides how many moves the queen takes
+        can_move_to_last_module = False                                                        # makes player not able to go to last module
+        
+        while moves_to_make > 0:                                                               # while there are moves available do..
+            escapes = get_modules_from(queen)                                                  # gets possible moves for queen module
+
+            if module in escapes:
+                escapes.remove(module)                                                         # if module is escape remove it
+
+            if last_module in escapes and not can_move_to_last_module:
+                escapes.remove(last_module)                                                    # lets queen double back behind us from another module
+
+            if locked in escapes:
+                escapes.remove(locked)                                                         # remove modules that are locked as escapes
+
+            if len(escapes) == 0:
+                print("Starting boss fight, -- you need at least 100 fuel in your flame thrower, ready?")
+                
+                if fuel < 100:
+                    print("You don't have enough fuel, you get killed.")
+                    won = False
+                    return
+                else:
+                    print("Enter the appropriate direction, 'up', 'down', 'left', 'right'.")
+                    user_input = input("Enter 'YES' to continue: ").strip().lower()
+                    
+                    if user_input != 'yes':
+                        print("You hesitated...")
+                        won = False
+                        return
+
+                    for i in range(3, -1, -1):                                                  # Fixed: step must be -1, not 0
+                        time.sleep(1)                                                           # Fixed: Changed 100 to 1 for a reasonable countdown
+                        print(i)
+                    print("GO!")
+
+                    queen_outcomes = {
+                        "Queen crawls on to the ceiling, where do you shoot?": "up",
+                        "Queen scutters to the left wall, where do you shoot?": "left",
+                        "The queen hugs the east wall, where do you shoot?": "right",
+                        "The queen lays low to the ground, where do you shoot?": "down"}
+
+                    while queen_outcomes:
+                        random_key = random.choice(list(queen_outcomes.keys()))
+                        correct_answer = queen_outcomes[random_key]
+
+                        print(random_key)
+                        player_input = input("Options: up, down, left, right | needed fule to shoot is 25 ").strip().lower()
+                        fuel = fuel - 25
+                        if player_input == correct_answer:
+                            print(f"Good shot! | fuel remaining:{fuel}")
+                            del queen_outcomes[random_key]
+                        else:
+                            print("You missed!")
+                            won = False
+                            return
+
+                won = True                                                                      # if queen is trapped and defeated, player wins
+                moves_to_make = 0
+                print("...and the door is locked. The queen is trapped.")
+
+            else:
+                if moves_to_make == 1:                                                          # otherwise move queen to another module
+                    print("...Queen alien has escaped.")
+                
+                queen = random.choice(escapes)
+                moves_to_make = moves_to_make - 1
+                can_move_to_last_module = True
+
+                while queen in vent_shafts:                                                     # handles when queen is in vent shaft module
+                    if moves_to_make > 1:
+                        print("You hear scuttling above your head. The queen escaped via vent shaft.")
+                    
+                    valid_move = False
+                    while not valid_move:
+                        valid_move = True
+                        queen = random.randint(1, num_modules)
+                        if queen in vent_shafts:
+                            valid_move = False
+                    
+                    moves_to_make = 0                                                           # stops queen from moving through shaft
+
 
 def output_module():
     global module
@@ -212,9 +291,6 @@ def output_moves():
 
 def lock(module_to_lock = None):
     global num_modules, power, locked, queen                                                      # make these globals available inside the function
-
-    
-
 
     if module_to_lock is None:                                                                    #check if module_to_lock is provided, if not ask the user for input
         new_lock_str = input("Enter the module number to lock: ")                               
@@ -353,6 +429,8 @@ print(f"{ORANGE}-{RESET}" * 45)
 
 while alive and not won:                                                                         #iteration to loop while playuer is not dead or won
     load_module()                                                                                #call load_module() func
+    check_vent_shafts()
+    move_queen()
     if won == False and alive == True:                                                           #if player is alive feed the game loop
         output_moves()
         get_action()
