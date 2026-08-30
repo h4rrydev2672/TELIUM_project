@@ -108,6 +108,20 @@ def TitleScreen():
 
 TitleScreen()
 
+def move_queen():
+    global num_modues, module, last_module, locked, queen, won, vent_shafts
+    if module == queen:                                                                            #if the player is in the same module as the queen
+        print(f"{YELLOW}-{RESET}" * 40)
+        print("The queen is here, it looks very angry.")
+        print(f"{YELLOW}-{RESET}" * 40)
+        moves_to_move = random.randint(1, 3)                                                       #desides how many moves the queen takes
+        can_move_to_last_module = False
+        while moves_to_move  >  0:
+            
+
+
+
+
 def check_vent_shafts():
     global num_modules, module, vent_shafts, fuel, current_module, last_module
     fuel_table = [20, 30, 40, 50]                                                                    #table of fuel amounts
