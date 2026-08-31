@@ -169,7 +169,8 @@ def move_queen():
         print("The queen is here, it looks very angry.")
         print(f"{YELLOW}-{RESET}" * 40)
         
-        moves_to_make = random.randint(1, 3)                                                   # decides how many moves the queen takes
+        #moves_to_make = random.randint(1, 3)                                                   # decides how many moves the queen takes
+        moves_to_make = 1
         can_move_to_last_module = False                                                        # makes player not able to go to last module
         
         while moves_to_make > 0:                                                               # while there are moves available do..
@@ -399,9 +400,13 @@ def show_map():
     with open("MAP.txt", "r", encoding="utf-8") as mapfile:
         for line in mapfile:
             target = f"{module:02d}"                                                            # ALWAYS two digits: 01, 02, 07, 12
-
-            if target in line:
+            queen_target = f"{queen:02d}"
+            locks_target = f"{locked:02d}"
+            if target in line or queen_target in line or locks_target in line :
                 line = line.replace(target, f"{RED}👨{RESET}")                                  # marker inside the box, same width
+                line = line.replace(queen_target, f"{YELLOW}👑{RESET}")
+                line = line.replace(locks_target, f"{YELLOW}🔒{RESET}")
+
 
             typeLine(line)
 
