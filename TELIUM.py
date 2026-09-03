@@ -365,23 +365,51 @@ def get_action():
             continue
 
         if action == "l":                                                                         #if preesed call func show_map() to display the map   
-            # show standard map: player + locked module only
-            show_map(show_queen=False)
+            show_map(show_queen = False)                                                            # show standard map: player + locked module only
             continue
 
         # SCANNER HANDLEING
 
         if action == "scanner" or action == "s":                                                 #allowing 's' as a shorthand for 'scanner'
-            command = input("Scanner ready, Enter command (LOCK), (POWER): ").lower().strip()    #allows abriviated commands for scanner
+            command = input("Scanner ready, Enter command (LOCK), (POWER), (SCAN): ").lower().strip()    #allows abriviated commands for scanner
             if command == "lock":
                 lock()
             elif command == "power":
                 print(f"Power remaining: {GREEN}{power}{RESET}")
+            elif command == "scan":
+                print(f"{BLACK}-{RESET}" * 40)
+                module_to_scan = input("Enter module number to scan: ").lower().strip()
+                print(f"{BLACK}-{RESET}" * 40)
+                power = power - 25
+                print(f"{GREEN}-{RESET}" * 40)
+                print(f"Power used: {GREEN}25{RESET}, Power remaining: {GREEN}{power}{RESET}")
+                print(f"{GREEN}-{RESET}" * 40)
+                print(" ")
+                if module_to_scan.isdigit():
+                    module_to_scan = int(module_to_scan)
+                    if module_to_scan == queen:
+                        print(f"{YELLOW}The queen is in module {module_to_scan}.{RESET}")
+                        print(" ")
+                    elif module_to_scan in workers:
+                        print(f"{ORANGE}A worker alien is in module {module_to_scan}.{RESET}")
+                        print(" ")
+                    elif module_to_scan in vent_shafts:
+                        print(f"{BLUE}A vent shaft is in module {module_to_scan}.{RESET}")
+                        print(" ")
+                    elif module_to_scan in info_panels:
+                        print(f"{CYAN}An info panel is in module {module_to_scan}.{RESET}")
+                        print(" ")
+                    else:
+                        print(f"{RED}-{RESET}" * 40)
+                        print(f"{WHITE}Module {module_to_scan} is empty.{RESET}")
+                        print(f"{RED}-{RESET}" * 40)
+                        print(" ")
             else:
                 print(f"{RED}Unknown scanner command.{RESET}")
             continue                                                                            #allow to continue
 
-        print(f"{RED}Unknown action.{RESET} Try {MAGENTA}MOVE{RESET}, {BLACK}LOCK{RESET}, {WHITE}SCANNER{RESET}, or L (map).{RESET}")
+        print(f"{RED}Unknown action.{RESET}")
+        print(f"{MAGENTA}MOVE{RESET}, {BLACK}LOCK{RESET}, {WHITE}SCANNER{RESET}, or L (map).{RESET}")
 
 def typeLine(line):
     for letter in line:
@@ -432,15 +460,20 @@ def Check_info_panels():
         
 def intuition():
     global possible_moves, workers, vent_shafts, queen, info_panels
+    worker_responses = ["worker alien moving around", "You hear a worker alien scuttling", "You see a worker alien moving"]
+    vent_shafts_responses = ["You feel cold air coming from a vent", "You hear a vent shaft whirring", "You see a vent shaft nearby"]
+    info_panels_responses = ["You see a flickering light from an info panel", "You hear a faint hum from an info panel", "You see a flickering light from an info panel"]
+    queen_responses = ["You feel a strong presence of the queen", "You hear a faint scuttling sound", "You see a shadow moving in the distance"]
+
     for connected_module in possible_moves:
         if connected_module in workers:                                                        #print a message if a worker alien is in a connected module
-            print(f"{ORANGE}You hear a worker alien moving around in module {connected_module}.{RESET}") 
+            print(f"{ORANGE}{worker_responses[random.randint(0, len(worker_responses) - 1)]} in module {connected_module}.{RESET}")
         if connected_module in vent_shafts:                                                    #print a message if a vent shaft is in a connected module
-            print(f"{BLUE}You feel cold air coming from a vent in module {connected_module}.{RESET}")
+            print(f"{BLUE}{vent_shafts_responses[random.randint(0, len(vent_shafts_responses) - 1)]} in module {connected_module}.{RESET}")
         if connected_module == queen:                                                          #print a message if the queen is in a connected module
-            print(f"{YELLOW}listen!, did you hear that?.. \nYou feel a strong presence of the queen here.{RESET}")
+            print(f"{YELLOW}{queen_responses[random.randint(0, len(queen_responses) - 1)]} in module {connected_module}.{RESET}")
         if connected_module in info_panels:                                                    #print a message if an info panel is in a connected module
-            print(f"{CYAN}You see a flickering light from an info panel in module {connected_module}.{RESET}")
+            print(f"{CYAN}{info_panels_responses[random.randint(0, len(info_panels_responses) - 1)]} in module {connected_module}.{RESET}")
 
 #MAIN PROGRAME
 spawn_npcs()                                                                                   #call spawn_npcs() func to spawn the npcs in random modules
