@@ -92,13 +92,30 @@ def TitleScreen():
         return
 
     elif user_option == "z":
-        print(f"{WHITE}-{WHITE}" * 78)
-        print(f"{WHITE}sorry!, there are curently no instructions our solo dev team is working on it {WHITE}")
-        print(f"{WHITE}-{RESET}" * 78)
+        print(f"{WHITE}-{WHITE}" * 100)
+        print(f"{WHITE}Here are the simple instructions for Telium:{WHITE}")
+        print()
+        print(f"{WHITE}Your goal is to trap and defeat the alien Queen. Explore the station, manage your resources, and survive.")
+        print(f"{WHITE}Move (M): Travel between connected modules.")
+        print(f"{WHITE}Lock (L): Lock a module to trap the Queen or block aliens (costs power).")
+        print(f"{WHITE}Scanner (S): Check your power or scan adjacent modules for aliens, vents, or info panels (costs 25 power).")
+        print(f"{WHITE}Map: Type L to view the station map and your current location.")
+        print()
+        print(f"{GREEN}Gameplay Elements{WHITE}")
+        print(f"{WHITE}The Queen: The main threat. If you trap her in a module with no escape routes,you will enter a boss fight.\n You need at least 100 fuel to start the fight, and each shot costs 25 fuel.")
+        print(f"{WHITE}Worker Aliens: These will attack you. You can use a short blast of your flamethrower to scare them away,\n a long blast to kill them, or attempt to run back to the previous module.")
+        print(f"{WHITE}Vent Shafts: These contain fuel cells for your flamethrower \nbut will randomly transport you to another module when you enter them.")
+        print(f"{WHITE}Info Panels: Use these to reveal the Queen's location on your map.")
+        print()
+        print(f"{GREEN}Tips for Survival{WHITE}")
+        print(f"{WHITE}Watch your Power: Moving and locking doors drains the station's power.")
+        print(f"{WHITE}Conserve Fuel: You need fuel to defend yourself from workers and to defeat the Queen. Don't waste it!")
+        print(f"{WHITE}Listen to your Intuition: You will receive warnings about what is in adjacent modules before you enter them. {WHITE}")
+        print(f"{WHITE}-{RESET}" * 100)
         print(" \n ")
 
     elif user_option == "q":
-        print(f"{WHITE}-{WHITE}" * len("Bye.."))                                                    #trying smt difrent 
+        print(f"{WHITE}-{WHITE}" * len("Bye.."))                                                    #trying smt difrent with len()
         print("Bye..")
         print(f"{WHITE}-{RESET}" * len("Bye.."))
         quit()
