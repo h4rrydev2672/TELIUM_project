@@ -26,9 +26,6 @@ ORANGE  = "\033[38;5;208m" #worker aliens
 #normal
 RESET   = "\033[0m"
 
-
-
-
 #global vars
 num_modules = 12
 module = 1
@@ -108,10 +105,9 @@ def TitleScreen():
 
 TitleScreen()
 
-
-
 def check_vent_shafts():
-    global num_modules, module, vent_shafts, fuel, current_module, last_module
+    # Removed undefined current_module from global list
+    global num_modules, module, vent_shafts, fuel, last_module
     fuel_table = [20, 30, 40, 50]                                                                    #table of fuel amounts
     if module in vent_shafts :
         print(f"{BLUE}-{RESET}" * 40)                                                        
@@ -136,8 +132,6 @@ def check_vent_shafts():
         print("We have arrived in module", module)
         print(f"{WHITE}-{RESET}" * 40)
 
-
-
 #procedure declarations
 def load_module():
     global module, possible_moves
@@ -151,15 +145,19 @@ def get_modules_from(module):
     text_file = open(f"Charles_Darwin/module{module}.txt", "r")      #FOR MAC USE
     lines = text_file.readlines()
 
-    #iteration to read the modules possible moves to ajacent rooms
-    for counter in range(4):
+    # read first 4 lines as move numbers
+    for counter in range(4):                                                                     ##iteration to read the modules possible moves to ajacent rooms
         move_read = int(lines[counter].strip())                                                  #strip() -> removes spaces ect
         if move_read != 0:
             moves.append(move_read)
-            module_name = lines[4].strip()
+
+    # set module_name from line 5 (index 4) after reading moves
+    if len(lines) > 4:
+        module_name = lines[4].strip()
+    else:
+        module_name = ""
     text_file.close()
     return moves
-
 
 def move_queen():
     global num_modules, module, last_module, locked, queen, won, vent_shafts, fuel
@@ -169,7 +167,7 @@ def move_queen():
         print("The queen is here, it looks very angry.")
         print(f"{YELLOW}-{RESET}" * 40)
         
-        #moves_to_make = random.randint(1, 3)                                                   # decides how many moves the queen takes
+        moves_to_make = random.randint(1, 3)                                                   # decides how many moves the queen takes
         moves_to_make = 1
         can_move_to_last_module = False                                                        # makes player not able to go to last module
         
@@ -252,7 +250,6 @@ def move_queen():
                     
                     moves_to_make = 0                                                           # stops queen from moving through shaft
 
-
 def output_module():
     global module
     print()
@@ -280,7 +277,6 @@ def output_module():
 
     print()
 
-
 def output_moves():
     global possible_moves
     print()
@@ -288,7 +284,6 @@ def output_moves():
     for moves in possible_moves:
         print(moves, '', end = '')
     print()
-
 
 def lock(module_to_lock = None):
     global num_modules, power, locked, queen                                                      # make these globals available inside the function
@@ -321,9 +316,9 @@ def lock(module_to_lock = None):
     power -= power_used
     print(f"Power used: {GREEN}{power_used}{RESET}, Power remaining: {GREEN}{power}{RESET}")
 
-
 def get_action():
-    global module, last_module, possible_moves, power                                                # make game state vars accessible
+    # removed unused player_target / queen_target / locks_target globals
+    global module, last_module, possible_moves, power                               # make game state vars accessible
 
     #MOVE HANDLEING
 
@@ -369,8 +364,9 @@ def get_action():
                 lock()                                                                            #call function 
             continue
 
-        if action == "l":                                                                         #if preesed call func show_map() to display the map    
-            show_map()
+        if action == "l":                                                                         #if preesed call func show_map() to display the map   
+            # show standard map: player + locked module only
+            show_map(show_queen=False)
             continue
 
         # SCANNER HANDLEING
@@ -387,32 +383,64 @@ def get_action():
 
         print(f"{RED}Unknown action.{RESET} Try {MAGENTA}MOVE{RESET}, {BLACK}LOCK{RESET}, {WHITE}SCANNER{RESET}, or L (map).{RESET}")
 
-
-
 def typeLine(line):
     for letter in line:
         print(letter, end="", flush=True)
         time.sleep(0.0005)
 
-def show_map():
+def show_map(show_queen: bool = False):
+    global module, queen, locked
+
+    player_str = f"{module:02d}"
+    queen_str = f"{queen:02d}"
+    locked_str = f"{locked:02d}" if locked != 0 else None
+
     #winsound.PlaySound(TYPEsound, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_LOOP)
+    try:                                                                                            #attempt to open the MAP.txt file and read its contents, 
+                                                                                                    #replacing placeholders with colored symbols for player, queen, and locked module
+        with open("MAP.txt", "r", encoding="utf-8") as mapfile:
+            for line in mapfile:
+                out_line = line
 
-    with open("MAP.txt", "r", encoding="utf-8") as mapfile:
-        for line in mapfile:
-            target = f"{module:02d}"                                                            # ALWAYS two digits: 01, 02, 07, 12
-            queen_target = f"{queen:02d}"
-            locks_target = f"{locked:02d}"
-            if target in line or queen_target in line or locks_target in line :
-                line = line.replace(target, f"{RED}👨{RESET}")                                  # marker inside the box, same width
-                line = line.replace(queen_target, f"{YELLOW}👑{RESET}")
-                line = line.replace(locks_target, f"{YELLOW}🔒{RESET}")
+                out_line = out_line.replace(player_str, f"{RED}👨{RESET}")                          # Replace player 
 
+                if locked_str:
+                    out_line = out_line.replace(locked_str, f"{YELLOW}🔒{RESET}")                   #replace locked module
 
-            typeLine(line)
+                if show_queen:
+                    out_line = out_line.replace(queen_str, f"{YELLOW}👑{RESET}")                    ## Reveal queen only when requested (info panel)
 
+                typeLine(out_line)
+    except FileNotFoundError:
+        print(f"{RED}MAP.txt not found in the current directory. Place a MAP.txt file next to TELIUM.py.{RESET}")
     #winsound.PlaySound(None, 0)
 
-
+def Check_info_panels():
+    global module, info_panels
+    if module in info_panels:
+        print(f"{CYAN}-{RESET}" * 80)
+        print("You see a flickering light from an info panel.")
+        print("You can use the info panel to get information about the station. and the queens location.")
+        print(f"{CYAN}-{RESET}" * 80)
+        user_input = input("Do you want to use the info panel? (yes/no): ").strip().lower()
+        if user_input == "yes":
+            print(f"{CYAN}-{RESET}" * 100)
+            print("You access the info panel and find a map of the station.")
+            print("The map shows the layout of the modules and the location of the queen.")
+            show_map(show_queen=True)                                                          #reveal queen when using the info panel
+            print(f"{CYAN}-{RESET}" * 100)
+        
+def intuition():
+    global possible_moves, workers, vent_shafts, queen, info_panels
+    for connected_module in possible_moves:
+        if connected_module in workers:                                                        #print a message if a worker alien is in a connected module
+            print(f"{ORANGE}You hear a worker alien moving around in module {connected_module}.{RESET}") 
+        if connected_module in vent_shafts:                                                    #print a message if a vent shaft is in a connected module
+            print(f"{BLUE}You feel cold air coming from a vent in module {connected_module}.{RESET}")
+        if connected_module == queen:                                                          #print a message if the queen is in a connected module
+            print(f"{YELLOW}listen!, did you hear that?.. \nYou feel a strong presence of the queen here.{RESET}")
+        if connected_module in info_panels:                                                    #print a message if an info panel is in a connected module
+            print(f"{CYAN}You see a flickering light from an info panel in module {connected_module}.{RESET}")
 
 #MAIN PROGRAME
 spawn_npcs()                                                                                   #call spawn_npcs() func to spawn the npcs in random modules
@@ -424,9 +452,9 @@ print(f"{BLUE}-{BLUE}" * 45)
 print("Vent shafts are located in modules", vent_shafts)
 print(f"{BLUE}-{RESET}" * 45)
 
-print(f"{WHITE}-{WHITE}" * 45)
+print(f"{CYAN}-{CYAN}" * 45)
 print("Info panels are located in modules", info_panels)
-print(f"{WHITE}-{RESET}" * 45)
+print(f"{CYAN}-{RESET}" * 45)
 
 print(f"{ORANGE}-{ORANGE}" * 45)
 print("Workers are located in modules", workers)
@@ -437,6 +465,9 @@ while alive and not won:                                                        
     check_vent_shafts()
     move_queen()
     if won == False and alive == True:                                                           #if player is alive feed the game loop
+        intuition()
+        Check_info_panels()
+
         output_moves()
         get_action()
 
