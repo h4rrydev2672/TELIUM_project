@@ -316,9 +316,77 @@ def lock(module_to_lock = None):
     power -= power_used
     print(f"Power used: {GREEN}{power_used}{RESET}, Power remaining: {GREEN}{power}{RESET}")
 
+def worker_aliens():
+    import random
+
+    global module, last_module, workers, fuel, alive
+    if module in workers:                                                                        # if the player is in the same module as a worker
+        print(f"{ORANGE}-{RESET}" * 60)
+        print("A young worker alien is here, it tries to leap at you.")
+        print(f"{ORANGE}-{RESET}" * 60)
+
+        successful_attack = False   
+        while not successful_attack:                                                            # loop until the player defends or dies
+            print(f"{BLACK}-{RESET}" * 80)                                                      #opption menue
+            print(f"{WHITE}You can:{BLACK}")
+            print(" ")
+            print(f"{ORANGE}- Short blast your flamethrower to frighten it away.{RESET}")
+            print(" ")
+            print(f"{RED}- Long blast your flamethrower to try to kill it.{RESET}")
+            print(" ")
+            print("- RUN, you return to previous module")
+            print(" ")
+            print(f"{WHITE}How will you react?{RESET}")
+            print(f"{BLACK}-{RESET}" * 80)
+
+            action = ""
+            while action not in ("s", "l", "run"):                                             #check approriate input
+                action = input("Press the trigger > ").lower().strip()
+
+            if action == "run":
+                if last_module in vent_shafts:
+                    chance_of_capture = 0.5                                                  # 50% default; change this value to tune risk
+                    if random.random() < chance_of_capture:
+                        print(f"The {ORANGE}worker alien{RESET} catches you in the vent shaft and kills you.")
+                        alive = False
+                        return
+                    else:
+                        print(f"You manage to escape the {ORANGE}worker alien{RESET} through the vents and make it back to the previous module.")
+                        module = last_module
+                        return
+                else:
+                    print(f"You run back to the previous module, leaving the {ORANGE}worker alien{RESET} behind.")
+                    module = last_module
+                    return
+
+
+            fuel_used = int(input("How much fuel do you want to use?...> "))
+
+            if fuel_used > fuel:
+                alive = False
+                print("You tried to use more fuel than you have and collapsed.")
+                return
+            if action == "s":
+                fuel_needed = 10 + 10 * random.randint(0, 30)
+            else:  
+                fuel_needed = 30 + 10 * random.randint(0, 3)
+            fuel -= fuel_used
+            if fuel_used >= fuel_needed:
+                successful_attack = True
+            else:
+                print(f"The {ORANGE}worker alien{RESET} squeals but is not dead... it's angry.")
+
+        if action == "s":
+            print(f"The {ORANGE}worker alien{RESET} scuttles away into the corner of the room.")
+        elif action == "l":
+            print(f"The {ORANGE}worker alien{RESET} is dead and destroyed.")
+            if module in workers:
+                workers.remove(module)
+            print()
+
 def get_action():
-    # removed unused player_target / queen_target / locks_target globals
-    global module, last_module, possible_moves, power                               # make game state vars accessible
+    
+    global module, last_module, possible_moves, power                                               # make game state vars accessible
 
     #MOVE HANDLEING
 
@@ -497,6 +565,7 @@ while alive and not won:                                                        
     load_module()                                                                                #call load_module() func
     check_vent_shafts()
     move_queen()
+    worker_aliens()
     if won == False and alive == True:                                                           #if player is alive feed the game loop
         intuition()
         Check_info_panels()
@@ -512,4 +581,4 @@ if alive == False:
     print("The station lost power unable to sustain life suport, you die. ")
     print("Game over, YOU LOST")
 
-#updated version 1.0.1
+#updated version: idk
